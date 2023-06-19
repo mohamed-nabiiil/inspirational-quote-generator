@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 //components
 import { GradientBackgroundCon , BackgroundImage1 ,BackgroundImage2,FooterCon,RedSpan,FooterLink ,QuoteGeneratorCon,QuoteGeneratorInnerCon,QuoteGeneratorTitle,QuoteGeneratorSubTitle,GenerateQuoteButton,GenerateQuoteButtonText} from '@/components/QuoteGenerator/QuoteGeneratorElements';
+import QuoteGeneratorModal from '@/components/QuoteGenerator'
 
 //Assets
 import Clouds1 from '../assets/cloud-and-thunder.png'
@@ -66,6 +67,32 @@ export default function Home() {
   useEffect(()=>{
    updateQuoteInfo();
   },[])
+
+  // Functions for quote generator modal
+  const handleCloseGenerator = () => {
+    setOpenGenerator(false);
+    setProcessingQuote(false);
+    setQuoteReceived(null);
+  }
+
+  const handleOpenGenerator = async (e: React.SyntheticEvent) => {
+   e.preventDefault();
+   setOpenGenerator(true);
+   setProcessingQuote(true); 
+   try {
+      // Run Lambda Function
+      //const runFunction = "runFunction";
+      //const runFunctionStringified = JSON.stringify(runFunction);
+      //setProcessingQuote(false);
+       setTimeout(() => {
+         setProcessingQuote(false);
+       }, 3000);
+    } catch (error) {
+      console.log('error generating quote:', error);
+      setProcessingQuote(false);
+    }
+  }
+
     return(
         <>
         <Head>
@@ -78,8 +105,14 @@ export default function Home() {
          <GradientBackgroundCon>
 
           {/* Quote Generator Modal Pop-up */ }
-          {/* <QuoteGeneratorModal
-          /> */}
+          <QuoteGeneratorModal
+            open={openGenerator}
+            close={handleCloseGenerator}
+            processingQuote={processingQuote}
+            setProcessingQuote={setProcessingQuote}
+            quoteReceived={quoteReceived}
+            setQuoteReceived={setQuoteReceived}
+          /> 
 
             {/* Quote Generator */ }
            <QuoteGeneratorCon>
@@ -90,7 +123,7 @@ export default function Home() {
                  <QuoteGeneratorSubTitle>
                  Looking for a splash of inspiration? Generate a quote card with a random inspirational quote provided by <FooterLink href="https://zenquotes.io/" target="_blank" rel="noopener noreferrer">ZenQuotes API</FooterLink>.
                  </QuoteGeneratorSubTitle>
-                 <GenerateQuoteButton >
+                 <GenerateQuoteButton onClick={handleOpenGenerator}>
               <GenerateQuoteButtonText>
                 Make a Quote
               </GenerateQuoteButtonText>
