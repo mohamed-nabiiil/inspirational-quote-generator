@@ -52,8 +52,17 @@ const QuoteGeneratorModal = ({
           return()=>{
             URL.revokeObjectURL(blobUrlGenerated);
           }
-        }
+        }/* else {
+          setBlobUrl(null);} */
      },[quoteReceived])
+     // Cleanup the blob URL when the modal is closed
+ /*  useEffect(() => {
+    return () => {
+      if (blobUrl) {
+        URL.revokeObjectURL(blobUrl);
+      }
+    };
+  }, [blobUrl]); */
 
     return(
         <Modal
@@ -90,7 +99,7 @@ const QuoteGeneratorModal = ({
                </>
              }
              {/* State #2: Quote state fulfilled */}
-            {quoteReceived === null && 
+            {quoteReceived !== null && 
                 <>
                   <QuoteGeneratorTitle>
                       Download your quote!
